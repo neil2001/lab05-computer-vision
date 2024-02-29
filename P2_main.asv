@@ -27,8 +27,8 @@ PARAMS.DEPTH_SAMPLES            = 0.2:0.05:2.1;  %> Inverse depth samples
 %> TODO: Find potential matches from a stereo images using inverse depths
 %> =======================================================================
 
-img1_double = im2double(rgb2gray(Img1)) * 255.0;
-img2_double = im2double(rgb2gray(Img2)) * 255.0;
+img1_double = im2double(rgb2gray(Img1));
+img2_double = im2double(rgb2gray(Img2));
 
 imageSize = size(Img1);
 
@@ -91,6 +91,14 @@ for ci=1:size(cornerLocations, 1)
 
         cx2 = g2(1)+w+1;
         cy2 = g2(2)+w+1;
+        
+        % Sanity check
+        % [Patch_X2, Patch_Y2] = meshgrid(cx-w:cx+w, cy-w:cy+w);
+        % Patch_X2 = Patch_X2'; Patch_Y2 = Patch_Y2';
+        % 
+        % %> Do interpolation to get photometry of the patch
+        % It_Patch2 = It_interp(Patch_X2, Patch_Y2);
+        % It_Patch2 = It_Patch2(:);
     
         %> Get the locations of the patch attached to the corner
         [Patch_X2, Patch_Y2] = meshgrid(cx2-w:cx2+w, cy2-w:cy2+w);
@@ -101,6 +109,8 @@ for ci=1:size(cornerLocations, 1)
         It_Patch2 = It_Patch2(:);
             
         ssd = sum((It_Patch - It_Patch2).^2) / (PARAMS.PATCH_SIZE)^2;
+
+        % avgSSD = ssd / (PARAMS.PATCH_SIZE)^2;
 
         if ssd < PARAMS.SSD_THRESH && ssd < minSSD
             depthIdx = depthIndex;
@@ -118,6 +128,24 @@ end
 cornerLocations = cornerLocations(corrIdxs, :);
 img2Corners = img2Corners(corrIdxs, :);
 nPoints = size(img2Corners, 1);
+
+% imshow(Img1);
+% hold on;
+% 
+% % Plot points on the image
+% scatter(cornerLocations(:, 1), cornerLocations(:, 2), 5, 'r', 'filled'); 
+% 
+% hold off;
+% title('Image with Points');
+% 
+% imshow(Img2);
+% hold on;
+% 
+% % Plot points on the image
+% scatter(img2Corners(:, 1), img2Corners(:, 2), 5, 'r', 'filled'); 
+% 
+% hold off;
+% title('Image with Points');
 
 draw_Feature_Matches(Img1, Img2, cornerLocations', img2Corners', nPoints, true)
 

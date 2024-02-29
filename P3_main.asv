@@ -35,11 +35,10 @@ F = transpose(K_inv) * E / K;
 img1Gray = rgb2gray(Img1);
 img2Gray = rgb2gray(Img2);
 
-% img1_single = im2single(img1Gray);
-% img2_single = im2single(img2Gray);
+img1_single = im2single(img1Gray);
 
-img1_double = im2double(img1Gray) * 255.0;
-img2_double = im2double(img2Gray) * 255.0;
+img1_double = im2double(img1Gray);
+img2_double = im2double(img2Gray);
 
 imageSize = size(Img1);
 
@@ -53,8 +52,8 @@ cornerLocations2_homogenous = [cornerLocations2, ones(size(cornerLocations2, 1),
 
 % Pad the images
 w = floor(PARAMS.PATCH_SIZE/2);
-Img1_Padded = padarray(img1_double, [w+1 w+1], 'replicate');
-Img2_Padded = padarray(img2_double, [w+1 w+1], 'replicate');
+Img1_Padded = padarray(img1Gray, [w+1 w+1], 'replicate');
+Img2_Padded = padarray(img2Gray, [w+1 w+1], 'replicate');
 
 % 3.2 
 [X, Y] = meshgrid(1:size(Img1_Padded,2), 1:size(Img1_Padded,1));

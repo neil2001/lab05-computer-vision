@@ -76,10 +76,10 @@ numPoints = size(allCornerFeatures{1}, 1);
 colors = distinguishable_colors(numPoints);
 
 % Plot corresponding points with different colors -------------------------
-plotCorrespondingFeatures(Img1, ImgN, allCornerFeatures, colors);
+% plotCorrespondingFeatures(Img1, ImgN, allCornerFeatures, colors);
 
 % Superimposed ------------------------------------------------------------
-plotSuperimposedFeatures(Img1, allCornerFeatures, colors);
+% plotSuperimposedFeatures(Img1, allCornerFeatures, colors);
 
 % USING ONLY ONE IMAGE LEVEL ----------------------------------------------
 cornerLocations = corners1.Location;
@@ -95,17 +95,8 @@ for i=2:nImgs
 
     [du, dv] = LucasKanadeOpticalFlow(originalImage, currImg, cornerLocations, patchSize);
     cornerLocations = cornerLocations + [du, dv];
-
-    [cornerLocations, cornerIdxs] = filterCorners(cornerLocations, imgSize);
-    for j=1:(i-1)
-        oneImgFeaturesAll{j} = oneImgFeaturesAll{j}(cornerIdxs, :);
-    end
-
     oneImgFeaturesAll{i} = cornerLocations;
 end
-
-numPoints = size(oneImgFeaturesAll{1}, 1);
-colors = distinguishable_colors(numPoints);
 
 % Plot corresponding points with different colors -------------------------
 plotCorrespondingFeatures(Img1, ImgN, oneImgFeaturesAll, colors);
